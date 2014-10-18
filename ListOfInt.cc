@@ -9,7 +9,7 @@
 #include "ListOfInt.h"
 
 template<typename TF>
-void myswap(TF a, TF b){
+void myswap(TF& a, TF& b){
 	TF c = a;
 	a = b;
 	b = c;
@@ -252,7 +252,7 @@ ListOfInt& ListOfInt::operator=(const ListOfInt& li) {
 	return *this;
 }
 
-void ListOfInt::swap(const ListOfInt& li) {
+void ListOfInt::swap(ListOfInt& li) {
 	myswap<size_t> (len, li.len);
 	myswap<ListOfInt::link_type> (head, li.head);
 	myswap<ListOfInt::link_type> (tail, li.tail);
@@ -335,7 +335,7 @@ void ListOfInt::copyOneValue(const ListOfInt& li) {
 	len = 0;
 	head = tail = NULL;
 	const_iterator it = li.begin();
-	for(int i = 0; i < li.len; i++){
+	for(int i = 0; i < li.len; i++, it++){
 		pushBack(*it);
 	}
 	assert( len == li.len);

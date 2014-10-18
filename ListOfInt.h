@@ -12,8 +12,9 @@
 
 class ListOfInt{
 private:
+	typedef int Type;
 	struct Node{
-		int value;
+		Type value;
 		Node* prev;
 		Node* next;
 		Node():value(0), prev(NULL), next(NULL){
@@ -25,7 +26,7 @@ private:
 	};
 public:
 
-	typedef int value_type;
+	typedef Type value_type;
 	typedef value_type& reference;
 	typedef const value_type& const_reference;
 	typedef value_type& pointer;
@@ -57,7 +58,7 @@ public:
 	ListOfInt(const_iterator beg, const_iterator end);
 
 	ListOfInt& operator=(const ListOfInt& li);
-	void swap(const ListOfInt& li);
+	void swap(ListOfInt& li);
 
 	void pushBack(value_type v);
 	void pushFront(value_type v);
@@ -71,7 +72,7 @@ public:
 	iterator insert(iterator pos, const_pointer beg, const_pointer end);
 
 
-	void print(std::ostream&)const;
+	void print(std::ostream& = std::cout)const;
 	bool empty();
 	size_t size()const;
 	~ListOfInt();
