@@ -5,7 +5,7 @@ CXXFLAGS= -c -g -Wall
 LANG=en_US
 
 .PHONY:all
-all: MyString iterator_pattern_list Set ListOfInt_Test
+all: MyString iterator_pattern_list Set ListOfInt_Test Collection_Test
 
 MyString:MyString.o
 	g++ -o $@ $^
@@ -26,7 +26,10 @@ ListOfInt_Test: ListOfInt_Test.o ListOfInt.o
 ListOfInt.o: ListOfInt.cc ListOfInt.h
 ListOfInt_Test.o: ListOfInt_Test.cc ListOfInt.h
 
-
+Collection_Test:Collection_Test.o Collection.o
+	g++ -o $@ $^
+Collection.o:Collection.cc Collection.h
+Collection_Test.o:Collection_Test.cc Collection.h
 
 .PHONY:clean
 clean: 
