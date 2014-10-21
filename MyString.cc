@@ -13,6 +13,8 @@
 #include <istream>
 #include <stdexcept>
 
+
+
 MyString::MyString(){
 	this->cstr = new char [1];
 	*cstr = '\0';
@@ -51,14 +53,14 @@ MyString::MyString(const MyString& str, int beg, int end ){
 }
 
 
-MyString& MyString::operator= (const MyString &str){
+MyString MyString::operator= (const MyString &str){
 	if(this == &str){
 		return *this;
 	}
 	return operator=(str.toCStr());
 }
 
-MyString& MyString::operator=(const char* str){
+MyString MyString::operator=(const char* str){
 	int len = strlen(str);
 	char *temp = new char [len+1];
 	strncpy(temp, str, len+1);
@@ -164,6 +166,7 @@ std::ostream& operator<< (std::ostream& out, const MyString& str){
 
 int main()
 {
+#if 0
 	MyString str;
 	std::cin >> str;
 	MyString str2(str);
@@ -186,6 +189,12 @@ int main()
 
 	newRet += ret;
 	std::cout << newRet << std::endl;
+#endif
+	MyString ms("Hello,world!");
+	MyString str1(ms);
+	str1 += "keyming";
+	std::cout << strlen((const char*)ms) << std::endl;
+
 
 	return 0;
 }

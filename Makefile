@@ -5,7 +5,7 @@ CXXFLAGS= -c -g -Wall
 LANG=en_US
 
 .PHONY:all
-all: MyString.out iterator_pattern_list.out Set.out ListOfInt_Test.out Collection_Test.out
+all: MyString.out iterator_pattern_list.out Set.out ListOfInt_Test.out Collection_Test.out simpleMem.out
 
 MyString.out:MyString.o
 	g++ -o $@ $^
@@ -30,6 +30,11 @@ Collection_Test.out:Collection_Test.o Collection.o
 	g++ -o $@ $^
 Collection.o:Collection.cc Collection.h
 Collection_Test.o:Collection_Test.cc Collection.h
+
+
+simpleMem.out:simpleMem.o
+	g++ -o $@ $^
+simpleMem.o:simpleMem.cc simpleMem.h
 
 .PHONY:clean
 clean: 
