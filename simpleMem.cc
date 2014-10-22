@@ -10,6 +10,10 @@
 
 SimpleMem* SimpleMem::instance = NULL;
 
+bool memBlockCmp(const SimpleMem::MemoryBlock* a, const SimpleMem::MemoryBlock* b){
+	return a->blockSize <  b->blockSize || (a->blockSize ==  b->blockSize && a->blockPtr < b->blockPtr);
+}
+
 SimpleMem::SimpleMem(size_t n): base(NULL), maxsize(n){
 	init();
 }
@@ -27,6 +31,7 @@ void SimpleMem::init(){
 //}
 
 void SimpleMem::arrangeMem(void* p) {
+
 	return ;
 }
 
@@ -53,6 +58,9 @@ void* SimpleMem::mallocMem(size_t siz) {
 			blockPtr += siz;
 			(*it)->blockPtr = blockPtr;
 			(*it)->blockSize -= siz;
+
+			unusedList.sort(memBlockCmp);
+			usedList.sort(memBlockCmp);
 			return ret;
 		}
 	}
@@ -90,6 +98,8 @@ void SimpleMem::deleteMem(void* p) {
 			usedList.erase(it);
 
 			arrangeMem(p);
+			unusedList.sort(memBlockCmp);
+			usedList.sort(memBlockCmp);
 			return ;
 		}
 	}

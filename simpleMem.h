@@ -13,7 +13,7 @@
 
 
 class SimpleMem{
-private:
+public:
 	struct MemoryBlock{
 		void* blockPtr;
 		size_t blockSize;
@@ -27,7 +27,7 @@ private:
 			std::cout << "ptr = " << blockPtr << ", size = " << blockSize << "\n";
 		}
 	};
-
+private:
 	void *base;
 	size_t maxsize;
 	std::list<MemoryBlock*> usedList;
@@ -48,6 +48,7 @@ protected:
 
 	void printList(LIST_TYPE ltype);
 public:
+
 	static SimpleMem* getInstance(size_t n);
 	void* mallocMem(size_t siz);
 	void deleteMem(void *p);
