@@ -15,25 +15,70 @@
 
 
 
+
+
+
+void* operator new(size_t siz, double d){
+	SimpleMem *sm = SimpleMem::getInstance(1024);
+	void *p = sm->mallocMem(siz);
+	if(p){
+		printf("malloc  a new block of memory at 0x%p\n", p);
+	}
+	else{
+		fprintf(stderr, "not enough memory");
+		throw std::bad_alloc();
+	}
+	return p;
+
+}
+
+void* operator new[](size_t siz, double d){
+	SimpleMem *sm = SimpleMem::getInstance(1024);
+	void *p = sm->mallocMem(siz);
+	if(p){
+		printf("malloc [] a new block of memory at 0x%p\n", p);
+	}
+	else{
+		fprintf(stderr, "not enough memory");
+		throw std::bad_alloc();
+	}
+	return p;
+
+}
+
+void operator delete(void* p, double d){
+	printf("free block at 0x%p\n", p);
+	SimpleMem *sm = SimpleMem::getInstance(1024);
+	sm->deleteMem(p);
+}
+
+void operator delete[](void* p, double d){
+	printf("free block[] at 0x%p\n", p);
+	SimpleMem *sm = SimpleMem::getInstance(1024);
+	sm->deleteMem(p);
+}
+
+
+
 MyString::MyString(){
-	this->cstr = new char [1];
+	this->cstr = new (0.0) char [1];
 	*cstr = '\0';
 }
 
 
 MyString::MyString(const char* str){
 	if(NULL == str){
-		this->cstr = new char [1];
+		this->cstr = new (0.0) char [1];
 		*cstr = '\0';
 	}
 	int len = strlen(str);
-	cstr = new char [len + 1];
+	cstr = new (0.0) char [len + 1];
 	strncpy(cstr, str, len+1);
 }
 
 MyString::MyString(const MyString& str){
 	int len = strlen(str.toCStr());
-	cstr = new char [len+1];
+	cstr = new (0.0) char [len+1];
 	strncpy(cstr, str.toCStr(), len+1);
 }
 
@@ -46,12 +91,16 @@ MyString::MyString(const MyString& str, int beg, int end ){
 		end = slen;
 	}
 	int len = end - beg;
-	cstr = new char [len + 1];
+	cstr = new (0.0) char [len + 1];
 	const char *p = str.toCStr() + beg;
 	strncpy(cstr, p, len);
 	*(cstr + len) = '\0';
 }
 
+MyString::~MyString(){
+	operator delete[]  (cstr, 0.0);
+	cstr = NULL;
+}
 
 MyString MyString::operator= (const MyString &str){
 	if(this == &str){
@@ -62,7 +111,7 @@ MyString MyString::operator= (const MyString &str){
 
 MyString MyString::operator=(const char* str){
 	int len = strlen(str);
-	char *temp = new char [len+1];
+	char *temp = new (0.0) char [len+1];
 	strncpy(temp, str, len+1);
 	delete[] cstr;
 	cstr = temp;
@@ -72,7 +121,7 @@ MyString MyString::operator=(const char* str){
 
 MyString MyString::operator+(const MyString& str)const{
 	MyString sum;
-	char *s = new char[strlen(cstr) + strlen(str.toCStr()) + 1];
+	char *s = new (0.0) char[strlen(cstr) + strlen(str.toCStr()) + 1];
 	strncpy(s, cstr, strlen(cstr));
 	strcat(s, str.toCStr());
 	sum = s;
@@ -80,10 +129,10 @@ MyString MyString::operator+(const MyString& str)const{
 }
 
 MyString& MyString::operator+= (const MyString& str){
-	char *s = new char[strlen(cstr) + strlen(str.toCStr()) + 1];
+	char *s = new (0.0) char[strlen(cstr) + strlen(str.toCStr()) + 1];
 	strncpy(s, cstr, strlen(cstr));
 	strcat(s, str.toCStr());
-	delete[] cstr;
+	operator delete[]  (cstr, 0.0);
 	cstr = s;
 	return *this;
 }
@@ -94,7 +143,7 @@ MyString MyString::operator*(unsigned int times)const{
 		return MyString();
 	}
 	int len = strlen(cstr) * times;
-	char *s = new char [len+1];
+	char *s = new (0.0) char [len+1];
 	char *p = s;
 	for(; times > 0; times--){
 		strncpy(p, cstr, strlen(cstr));
@@ -164,6 +213,7 @@ std::ostream& operator<< (std::ostream& out, const MyString& str){
 }
 
 
+
 int main()
 {
 #if 0
@@ -190,11 +240,23 @@ int main()
 	newRet += ret;
 	std::cout << newRet << std::endl;
 #endif
+	SimpleMem *sm = SimpleMem::getInstance(1024);
+	void* p1 = sm->mallocMem(100);
+	void* p2 = sm->mallocMem(64);
+	void*p3 = sm->mallocMem(32);
+
+	sm->deleteMem(p2);
+
+	sm->printUnusedList();
+	sm->printUsedList();
 	MyString ms("Hello,world!");
 	MyString str1(ms);
 	str1 += "keyming";
 	std::cout << strlen((const char*)ms) << std::endl;
 
+
+	sm->printUnusedList();
+	sm->printUsedList();
 
 	return 0;
 }

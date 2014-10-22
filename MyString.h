@@ -9,45 +9,7 @@
 #define MYSTRING_H_
 #include <iostream>
 #include <new>
-
-
-
-
-inline void* operator new(size_t siz){
-	void *p = malloc(siz);
-	if(p){
-		printf("malloc  a new block of memory at 0x%p\n", p);
-	}
-	else{
-		fprintf(stderr, "not enough memory");
-		throw std::bad_alloc();
-	}
-	return p;
-
-}
-
-inline void* operator new[](size_t siz){
-	void *p = malloc(siz);
-	if(p){
-		printf("malloc [] a new block of memory at 0x%p\n", p);
-	}
-	else{
-		fprintf(stderr, "not enough memory");
-		throw std::bad_alloc();
-	}
-	return p;
-
-}
-
-inline void operator delete(void* p){
-	printf("free block at 0x%p\n", p);
-	free(p);
-}
-
-inline void operator delete[](void* p){
-	printf("free block[] at 0x%p\n", p);
-	free(p);
-}
+#include "simpleMem.h"
 
 
 class MyString{
@@ -78,10 +40,7 @@ public:
 	}
 
 
-	virtual ~MyString(){
-		delete[] cstr;
-		cstr = NULL;
-	}
+	virtual ~MyString();
 
 	friend std::istream& operator>> (std::istream& in, MyString& str);
 	friend std::ostream& operator<< (std::ostream& out, const MyString& str);

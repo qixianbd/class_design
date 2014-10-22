@@ -5,9 +5,9 @@ CXXFLAGS= -c -g -Wall
 LANG=en_US
 
 .PHONY:all
-all: MyString.out iterator_pattern_list.out Set.out ListOfInt_Test.out Collection_Test.out simpleMem.out
+all: MyString.out iterator_pattern_list.out Set.out ListOfInt_Test.out Collection_Test.out simpleMem_Test
 
-MyString.out:MyString.o
+MyString.out:MyString.o simpleMem.o
 	g++ -o $@ $^
 
 iterator_pattern_list.out:iterator_pattern_list.o
@@ -31,8 +31,7 @@ Collection_Test.out:Collection_Test.o Collection.o
 Collection.o:Collection.cc Collection.h
 Collection_Test.o:Collection_Test.cc Collection.h
 
-
-simpleMem.out:simpleMem.o
+simpleMem_Test:simpleMem_Test.o simpleMem.o
 	g++ -o $@ $^
 simpleMem.o:simpleMem.cc simpleMem.h
 

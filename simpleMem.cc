@@ -14,8 +14,9 @@ SimpleMem::SimpleMem(size_t n): base(NULL), maxsize(n){
 	init();
 }
 void SimpleMem::init(){
-	static void* memBase[MID_SIZE];
-	maxsize = MID_SIZE;
+	static void* memBase = operator new(100*MID_SIZE);
+	std::cout << "***memBase size = " << sizeof(memBase) << std::endl;
+	maxsize = 100*MID_SIZE;
 	base = memBase;
 
 	MemoryBlock *mb = new MemoryBlock(base,maxsize);
@@ -94,15 +95,4 @@ void SimpleMem::deleteMem(void* p) {
 	}
 }
 
-int main()
-{
-	SimpleMem *sm = SimpleMem::getInstance(1024);
-	void* p1 = sm->mallocMem(100);
-	void* p2 = sm->mallocMem(64);
-	void*p3 = sm->mallocMem(32);
 
-	sm->deleteMem(p2);
-
-	sm->printUnusedList();
-	sm->printUsedList();
-}
